@@ -21,13 +21,19 @@ public class EmployeesVM {
 		return currentEmployee;
 	}
 	
-	public Collection<Department>
-	getDepartments() {
+	public Collection<Department> getDepartments() {
 		System.out.println("getDepartments()");
 		EntityManager em = JpaUtil.getEntityManager();
 		
-		List<Department> departments = em.createQuery("SELECT d FROM Department d",
-				Department.class).getResultList();
+		List<Department> departments = 
+				em.createQuery("SELECT d FROM Department d", Department.class)
+		.getResultList();
+		
+		// force initialization of the getEmployees lazy loaded collection
+		// since the Departments become detached just after the end of the
+		// request, but we will add the currentEmployee to the collection
+		// of one of the detached Departments in the combo (which would throw
+		// a lazy loading exception)
 		for (Department d : departments) {
 			d.getEmployees().size();
 		}
@@ -57,14 +63,15 @@ public class EmployeesVM {
 		em.remove(em.merge(employee));
 	}
 	
-
-	
 	@NotifyChange("currentEmployee")
 	@Command
 	public void newEmployee() {
 		this.currentEmployee = new Employee();
 	}
 	
+	// We add here departments in order to, the department of the 
+	// currentEmployee always match one of the departments 
+	// in the departments combobox
 	@NotifyChange({"currentEmployee", "employees", "departments"})
 	@Command
 	public void save() {
