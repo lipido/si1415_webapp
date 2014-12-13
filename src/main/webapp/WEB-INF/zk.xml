@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk>
+	<!-- [Optional]
+	Uncomment if you want to defines the application's name 
+	
+	<preference>
+		<name>org.zkoss.zk.ui.WebApp.name</name>
+		<value>webapp</value>
+	</preference>
+	-->
+	<preference>
+		<name>JpaUtil.PersistenceUnitName</name>
+		<value>si-database</value>
+	</preference>
+	<!-- Specify JPA "OpenEntityManagerInView" Listener -->
+	<listener>
+		<description>JPA "OpenEntityManagerInView" Listener</description>
+		<listener-class>org.zkoss.zkplus.jpa.OpenEntityManagerInViewListener
+		</listener-class>
+	</listener>
+
+</zk>

@@ -1,0 +1,9 @@
+<zk>
+	<include src="menu.zul"></include>
+	<html>
+	<![CDATA[ 
+	 <h1>Welcome to our CRUD demo!</h1>              
+	               
+	]]>
+	</html>
+</zk>

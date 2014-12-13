@@ -1,0 +1,12 @@
+<?page title="menu" contentType="text/html;charset=UTF-8"?>
+<zk>
+<menubar>
+<menu label="Departments"><menupopup>
+<menuitem label="Edit departments..." href="edit_departments.zul"/>
+</menupopup></menu>
+<menu label="Employees"><menupopup>
+<menuitem label="Edit employees..." href="edit_employees.zul" />
+</menupopup></menu>
+</menubar>
+
+</zk>
