@@ -10,7 +10,7 @@
 		<window id="departmenteditor" title="Department Editor"
 			border="normal" mode="modal" visible="@load(vm.currentDepartment ne null)">
 			
-			<textbox value="@bind(vm.currentDepartment.name)" />
+			<textbox value="@load(vm.currentDepartment.name) @save(vm.currentDepartment.name, before='save')" />
 			<hbox>
 				<button label="save" onClick="@command('save')" />
 				<button label="cancel" onClick="@command('cancel')" />

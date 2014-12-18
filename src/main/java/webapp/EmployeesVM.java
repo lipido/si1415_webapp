@@ -4,18 +4,25 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.zkplus.jpa.JpaUtil;
 
 import persistence.Department;
 import persistence.Employee;
+import persistence.util.Transaction;
+import persistence.util.TransactionUtil;
 
 public class EmployeesVM {
 
 	private Employee currentEmployee = null;
+	private boolean edit = false; //edit / new mode
+	
+	@PersistenceContext(type=PersistenceContextType.EXTENDED)
+	private EntityManager em;
 	
 	public Employee getCurrentEmployee() {
 		return currentEmployee;
@@ -23,28 +30,17 @@ public class EmployeesVM {
 	
 	public Collection<Department> getDepartments() {
 		System.out.println("getDepartments()");
-		EntityManager em = JpaUtil.getEntityManager();
 		
 		List<Department> departments = 
 				em.createQuery("SELECT d FROM Department d", Department.class)
 		.getResultList();
-		
-		// force initialization of the getEmployees lazy loaded collection
-		// since the Departments become detached just after the end of the
-		// request, but we will add the currentEmployee to the collection
-		// of one of the detached Departments in the combo (which would throw
-		// a lazy loading exception)
-		for (Department d : departments) {
-			d.getEmployees().size();
-		}
 		
 		return departments;
 	}
 	
 	public Collection<Employee>
 		getEmployees() {
-		System.out.println("getEmployees()");
-		EntityManager em = JpaUtil.getEntityManager();
+		System.out.println("getEmployees() Extended");
 		
 		return em.createQuery("SELECT e FROM Employee e",
 				Employee.class).getResultList();
@@ -53,30 +49,47 @@ public class EmployeesVM {
 	@NotifyChange("currentEmployee")
 	@Command
 	public void edit(@BindingParam("employee") Employee employee) {
+		this.edit = true;
 		this.currentEmployee = employee;
 	}
 	
 	@NotifyChange("employees")
 	@Command
-	public void delete(@BindingParam("employee") Employee employee) {
-		EntityManager em = JpaUtil.getEntityManager();
-		em.remove(em.merge(employee));
+	public void delete(@BindingParam("employee") final Employee employee) {
+		TransactionUtil.doTransaction(em, new Transaction(){
+			@Override
+			public void doTransation(EntityManager em) {
+				em.remove(employee); //without merge!!
+			}}
+		);
 	}
 	
 	@NotifyChange("currentEmployee")
 	@Command
 	public void newEmployee() {
+		this.edit = false;
 		this.currentEmployee = new Employee();
 	}
 	
-	// We add here departments in order to, the department of the 
-	// currentEmployee always match one of the departments 
-	// in the departments combobox
-	@NotifyChange({"currentEmployee", "employees", "departments"})
+	@NotifyChange({"currentEmployee", "employees"})
 	@Command
 	public void save() {
-		EntityManager em = JpaUtil.getEntityManager();
-		em.merge(this.currentEmployee);
+		
+		TransactionUtil.doTransaction(em, new Transaction(){
+
+			@Override
+			public void doTransation(EntityManager em) {
+				if (!edit) {
+					// new employee
+					em.persist(currentEmployee);
+				} else {
+					// update existing employee
+					// to save a persistent entity, there is no need to 
+					// do anything, only to close this transaction
+				}
+			}
+		});
+		
 		this.currentEmployee = null;
 	}
 	

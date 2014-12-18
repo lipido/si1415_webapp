@@ -10,10 +10,10 @@
 		<window id="employeeeditor" title="Employee Editor"
 			border="normal" mode="modal" visible="@load(vm.currentEmployee ne null)">
 			
-			<textbox value="@bind(vm.currentEmployee.name)" />
+			<textbox value="@load(vm.currentEmployee.name) @save(vm.currentEmployee.name, before='save')" />
 			
 			<combobox model="@load(vm.departments)" 
-						selectedItem="@bind(vm.currentEmployee.department)">
+						selectedItem="@load(vm.currentEmployee.department) @save(vm.currentEmployee.department, before='save')">
 				<template name="model">
 					<comboitem label="@bind(each.name)" />
 				</template>
