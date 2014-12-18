@@ -13,11 +13,42 @@
 		<name>JpaUtil.PersistenceUnitName</name>
 		<value>si-database</value>
 	</preference>
-	<!-- Specify JPA "OpenEntityManagerInView" Listener -->
-	<listener>
-		<description>JPA "OpenEntityManagerInView" Listener</description>
-		<listener-class>org.zkoss.zkplus.jpa.OpenEntityManagerInViewListener
-		</listener-class>
-	</listener>
+	
+	<!-- CHOOSE ONE OF THE FOLLOWING:
+		- "OpenEntityManagerInView": A "stateless" solution where the entity 
+		manager is open and closed in each HTTP request
+		- "OpenExtendedEntityManagerInVMListener": a "stateful" solution where
+		the entity manager remains open during the ViewModel lifespan.
+	 -->
+	
+		<!-- Specify JPA "OpenEntityManagerInView" Listener -->
+		<!--
+		<listener>
+			<description>
+				JPA "OpenEntityManagerInView" Listener
+			</description>
+			<listener-class>
+				org.zkoss.zkplus.jpa.OpenEntityManagerInViewListener
+			</listener-class>
+		</listener>
+		-->
+		
+		
+		<!-- Inject EntityManager in @PersistenceContext(type=EXTENDED) 
+		annotated attributes ViewModels -->
+		<listener>
+	        <description>
+	        	Extended Persistence Context Support in VMs
+	        </description>
+	        <listener-class>
+	        	persistence.util.OpenExtendedEntityManagerInVMListener
+	        </listener-class>
+	    </listener>
+	    <preference>
+	        <name>
+	        	OpenExtendedEntityManagerInVMListener.DefaultPersistenceUnitName
+	        </name>
+	        <value>si-database</value>
+	    </preference>
 
 </zk>
