@@ -1,4 +1,4 @@
-package profesorsi.webapp;
+package webapp;
 
 import javax.persistence.EntityManager;
 

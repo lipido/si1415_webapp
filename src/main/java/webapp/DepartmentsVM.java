@@ -1,4 +1,4 @@
-package profesorsi.webapp;
+package webapp;
 
 import java.util.Collection;
 

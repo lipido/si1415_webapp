@@ -2,7 +2,7 @@
 	<include src="menu.zul"/>
 	<window title="Edit Employees" border="normal" 
 		apply="org.zkoss.bind.BindComposer"
-		viewModel="@id('vm')@init('profesorsi.webapp.EmployeesVM')">
+		viewModel="@id('vm')@init('webapp.EmployeesVM')">
 		
 		
 		<!-- create/edit employee dialog -->

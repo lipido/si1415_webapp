@@ -2,7 +2,7 @@
 	<include src="menu.zul"/>
 	<window title="Edit Departments" border="normal" 
 		apply="org.zkoss.bind.BindComposer"
-		viewModel="@id('vm')@init('profesorsi.webapp.DepartmentsVM')">
+		viewModel="@id('vm')@init('webapp.DepartmentsVM')">
 		
 		
 		<!-- create/edit department dialog -->
